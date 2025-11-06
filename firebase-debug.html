@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase 연결 테스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: #10B981; }
+        .error { color: #EF4444; }
+        .info { color: #8b2d42; }
+        button {
+            padding: 10px 20px;
+            background: #6a1a2b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #4d1320;
+        }
+        pre {
+            background: #f3f4f6;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+</head>
+<body>
+    <h1>Firebase 연결 테스트</h1>
+    
+    <div class="test-section">
+        <h2>1. Firebase 초기화 확인</h2>
+        <div id="init-check"></div>
+        <button onclick="checkInitialization()">초기화 확인</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Firestore 연결 테스트</h2>
+        <div id="firestore-check"></div>
+        <button onclick="testFirestore()">Firestore 테스트</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Storage 연결 테스트</h2>
+        <div id="storage-check"></div>
+        <button onclick="testStorage()">Storage 테스트</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Authentication 연결 테스트</h2>
+        <div id="auth-check"></div>
+        <button onclick="testAuth()">Authentication 테스트</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. 견적 데이터 쓰기 테스트</h2>
+        <div id="write-check"></div>
+        <button onclick="testWrite()">데이터 쓰기 테스트</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>6. 견적 데이터 읽기 테스트</h2>
+        <div id="read-check"></div>
+        <button onclick="testRead()">데이터 읽기 테스트</button>
+    </div>
+    
+    <script>
+        function logResult(elementId, message, isSuccess) {
+            const element = document.getElementById(elementId);
+            const className = isSuccess ? 'success' : 'error';
+            element.innerHTML = `<p class="${className}">${message}</p>`;
+        }
+        
+        function checkInitialization() {
+            const result = document.getElementById('init-check');
+            try {
+                if (typeof firebase === 'undefined') {
+                    logResult('init-check', '❌ Firebase SDK가 로드되지 않았습니다.', false);
+                    return;
+                }
+                
+                if (typeof db === 'undefined') {
+                    logResult('init-check', '❌ Firestore가 초기화되지 않았습니다.', false);
+                    return;
+                }
+                
+                if (typeof storage === 'undefined') {
+                    logResult('init-check', '❌ Storage가 초기화되지 않았습니다.', false);
+                    return;
+                }
+                
+                if (typeof auth === 'undefined') {
+                    logResult('init-check', '❌ Authentication이 초기화되지 않았습니다.', false);
+                    return;
+                }
+                
+                logResult('init-check', '✅ Firebase 초기화 완료', true);
+                result.innerHTML += `<pre>프로젝트 ID: ${firebaseConfig.projectId}</pre>`;
+            } catch (error) {
+                logResult('init-check', '❌ 오류: ' + error.message, false);
+            }
+        }
+        
+        async function testFirestore() {
+            const result = document.getElementById('firestore-check');
+            try {
+                logResult('firestore-check', '⏳ Firestore 연결 테스트 중...', true);
+                
+                // 간단한 읽기 테스트
+                const testDoc = await db.collection('test').limit(1).get();
+                logResult('firestore-check', '✅ Firestore 연결 성공!', true);
+                result.innerHTML += `<pre>읽기 테스트 완료 (${testDoc.size}개 문서)</pre>`;
+            } catch (error) {
+                logResult('firestore-check', '❌ Firestore 연결 실패: ' + error.message, false);
+                result.innerHTML += `<pre>오류 코드: ${error.code || '알 수 없음'}</pre>`;
+                
+                if (error.code === 'permission-denied') {
+                    result.innerHTML += `<p class="info">💡 Firestore 보안 규칙을 확인하세요. Firebase 콘솔에서 Firestore 규칙을 설정해야 합니다.</p>`;
+                }
+            }
+        }
+        
+        async function testStorage() {
+            const result = document.getElementById('storage-check');
+            try {
+                logResult('storage-check', '⏳ Storage 연결 테스트 중...', true);
+                
+                // Storage 참조 테스트
+                const testRef = storage.ref('test/test.txt');
+                logResult('storage-check', '✅ Storage 연결 성공!', true);
+                result.innerHTML += `<pre>Storage 참조 생성 완료</pre>`;
+            } catch (error) {
+                logResult('storage-check', '❌ Storage 연결 실패: ' + error.message, false);
+            }
+        }
+        
+        async function testAuth() {
+            const result = document.getElementById('auth-check');
+            try {
+                logResult('auth-check', '⏳ Authentication 테스트 중...', true);
+                
+                // 현재 인증 상태 확인
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        logResult('auth-check', '✅ 로그인된 사용자: ' + user.email, true);
+                    } else {
+                        logResult('auth-check', 'ℹ️ 로그인되지 않음 (정상)', true);
+                    }
+                });
+                
+                result.innerHTML += `<p class="info">💡 Authentication 서비스가 활성화되어 있는지 Firebase 콘솔에서 확인하세요.</p>`;
+            } catch (error) {
+                logResult('auth-check', '❌ Authentication 테스트 실패: ' + error.message, false);
+            }
+        }
+        
+        async function testWrite() {
+            const result = document.getElementById('write-check');
+            try {
+                logResult('write-check', '⏳ 데이터 쓰기 테스트 중...', true);
+                
+                const testData = {
+                    title: '테스트 견적 요청',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                await db.collection('quoteRequests_public').doc('test-' + Date.now()).set(testData);
+                logResult('write-check', '✅ 데이터 쓰기 성공!', true);
+                result.innerHTML += `<pre>테스트 데이터가 quoteRequests_public 컬렉션에 저장되었습니다.</pre>`;
+            } catch (error) {
+                logResult('write-check', '❌ 데이터 쓰기 실패: ' + error.message, false);
+                result.innerHTML += `<pre>오류 코드: ${error.code || '알 수 없음'}</pre>`;
+                
+                if (error.code === 'permission-denied') {
+                    result.innerHTML += `<p class="error">💡 Firestore 보안 규칙에서 쓰기 권한이 필요합니다.</p>`;
+                    result.innerHTML += `<pre>필요한 규칙:
+match /quoteRequests_public/{docId} {
+  allow write: if true;
+}</pre>`;
+                }
+            }
+        }
+        
+        async function testRead() {
+            const result = document.getElementById('read-check');
+            try {
+                logResult('read-check', '⏳ 데이터 읽기 테스트 중...', true);
+                
+                const snapshot = await db.collection('quoteRequests_public').limit(5).get();
+                logResult('read-check', `✅ 데이터 읽기 성공! (${snapshot.size}개 문서)`, true);
+                
+                if (snapshot.empty) {
+                    result.innerHTML += `<p class="info">ℹ️ 아직 데이터가 없습니다. 견적 요청을 제출하면 데이터가 생성됩니다.</p>`;
+                } else {
+                    let html = '<ul>';
+                    snapshot.forEach(doc => {
+                        html += `<li>${doc.id}: ${JSON.stringify(doc.data())}</li>`;
+                    });
+                    html += '</ul>';
+                    result.innerHTML += html;
+                }
+            } catch (error) {
+                logResult('read-check', '❌ 데이터 읽기 실패: ' + error.message, false);
+                result.innerHTML += `<pre>오류 코드: ${error.code || '알 수 없음'}</pre>`;
+                
+                if (error.code === 'permission-denied') {
+                    result.innerHTML += `<p class="error">💡 Firestore 보안 규칙에서 읽기 권한이 필요합니다.</p>`;
+                } else if (error.code === 'failed-precondition') {
+                    result.innerHTML += `<p class="error">💡 인덱스가 필요할 수 있습니다. Firebase 콘솔에서 인덱스 생성 링크를 확인하세요.</p>`;
+                }
+            }
+        }
+        
+        // 페이지 로드 시 자동으로 초기화 확인
+        window.addEventListener('load', function() {
+            setTimeout(checkInitialization, 1000);
+        });
+    </script>
+</body>
+</html>
+
+

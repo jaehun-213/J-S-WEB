@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="(주)제이앤에스건설 관리자 로그인">
+    <title>관리자 로그인 | (주)제이앤에스건설</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <img src="images/제이엔에스로고.jpg" alt="(주)제이앤에스건설 로고">
+                </div>
+                <span>(주)제이앤에스건설</span>
+            </a>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">메인</a>
+                <a href="about.html" class="nav-item">회사소개</a>
+                <a href="business.html" class="nav-item">사업영역</a>
+                <a href="portfolio.html" class="nav-item">시공실적</a>
+                <a href="support.html" class="nav-item">고객지원</a>
+            </nav>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content">
+        <section class="section">
+            <div class="container">
+                <div style="max-width: 500px; margin: 0 auto;">
+                    <div class="card">
+                        <div class="card-body" style="padding: 3rem;">
+                            <h2 style="color: var(--primary-blue); margin-bottom: 2rem; text-align: center;">관리자 로그인</h2>
+                            
+                            <div id="error-message" style="display: none; padding: 1rem; background: #FEE2E2; border: 1px solid #EF4444; border-radius: 8px; color: #EF4444; margin-bottom: 1.5rem;"></div>
+                            
+                            <form id="login-form" onsubmit="return handleLogin(event);">
+                                <div class="form-group">
+                                    <label class="form-label">이메일 <span class="required">*</span></label>
+                                    <input type="email" class="form-control" id="email" required placeholder="admin@example.com">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">비밀번호 <span class="required">*</span></label>
+                                    <input type="password" class="form-control" id="password" required placeholder="비밀번호를 입력하세요">
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1.125rem; font-size: 1.125rem; margin-top: 1rem;">
+                                    로그인
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 풋터 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>(주)제이앤에스건설</h3>
+                    <p>정밀한 기술과 신뢰의 시공으로<br>고객과 함께 성장합니다.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>회사 정보</h3>
+                    <p>대표자: 김소연</p>
+                    <p><strong>본사:</strong> 인천광역시 부평구 경인로 1107 2층 (일신동)</p>
+                    <p><strong>지사:</strong> 경기도 김포시 양촌읍 석모로 44번길 90</p>
+                </div>
+                <div class="footer-section">
+                    <h3>연락처</h3>
+                    <p>전화: <a href="tel:031-986-1190">031-986-1190</a></p>
+                    <p>팩스: 031-986-1191</p>
+                    <p>이메일: <a href="mailto:jandscons@naver.com">jandscons@naver.com</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2025 J&S. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // 이미 로그인된 경우 리디렉션 (단, 명시적으로 로그아웃을 원하는 경우는 제외)
+        auth.onAuthStateChanged((user) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const forceLogin = urlParams.get('force') === 'true'; // force=true 파라미터가 있으면 리디렉션 안함
+            
+            if (user && !forceLogin) {
+                const redirect = urlParams.get('redirect');
+                if (redirect) {
+                    window.location.href = redirect;
+                } else {
+                    window.location.href = 'quote-list.html';
+                }
+            } else if (user && forceLogin) {
+                // 이미 로그인되어 있지만 강제 로그인 페이지를 보여줌
+                document.getElementById('login-form').style.display = 'block';
+                const logoutBtn = document.createElement('button');
+                logoutBtn.type = 'button';
+                logoutBtn.className = 'btn btn-outline';
+                logoutBtn.textContent = '현재 계정 로그아웃';
+                logoutBtn.style.marginTop = '1rem';
+                logoutBtn.style.width = '100%';
+                logoutBtn.onclick = async function() {
+                    if (confirm('로그아웃하시겠습니까?')) {
+                        try {
+                            await auth.signOut();
+                            alert('로그아웃되었습니다.');
+                            location.reload();
+                        } catch (error) {
+                            console.error('로그아웃 오류:', error);
+                            alert('로그아웃 중 오류가 발생했습니다.');
+                        }
+                    }
+                };
+                const form = document.getElementById('login-form');
+                if (form && !form.querySelector('.btn-outline[type="button"]')) {
+                    form.appendChild(logoutBtn);
+                }
+            }
+        });
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error-message');
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            
+            errorDiv.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = '로그인 중...';
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                
+                // 로그인 성공 - 리디렉션은 onAuthStateChanged에서 처리
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                if (redirect) {
+                    window.location.href = redirect;
+                } else {
+                    window.location.href = 'quote-list.html';
+                }
+            } catch (error) {
+                console.error('로그인 오류:', error);
+                console.error('오류 코드:', error.code);
+                console.error('오류 메시지:', error.message);
+                
+                // Firebase 초기화 확인
+                if (typeof firebase === 'undefined') {
+                    errorDiv.textContent = 'Firebase가 초기화되지 않았습니다. firebase-config.js 파일을 확인하세요.';
+                } else if (typeof auth === 'undefined') {
+                    errorDiv.textContent = 'Firebase Authentication이 초기화되지 않았습니다.';
+                } else {
+                    errorDiv.textContent = getErrorMessage(error.code, error.message);
+                }
+                errorDiv.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = '로그인';
+            }
+            
+            return false;
+        }
+
+        function getErrorMessage(errorCode, errorMessage) {
+            if (!errorCode) {
+                return `오류가 발생했습니다: ${errorMessage || '알 수 없는 오류'}`;
+            }
+            
+            switch (errorCode) {
+                case 'auth/user-not-found':
+                    return '등록되지 않은 이메일입니다. Firebase Authentication에서 계정을 먼저 생성해주세요.';
+                case 'auth/wrong-password':
+                    return '비밀번호가 올바르지 않습니다.';
+                case 'auth/invalid-email':
+                    return '올바른 이메일 형식이 아닙니다.';
+                case 'auth/too-many-requests':
+                    return '너무 많은 로그인 시도가 있었습니다. 잠시 후 다시 시도해주세요.';
+                case 'auth/user-disabled':
+                    return '이 계정은 비활성화되었습니다.';
+                case 'auth/network-request-failed':
+                    return '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.';
+                default:
+                    return `로그인 중 오류가 발생했습니다. (코드: ${errorCode}, 메시지: ${errorMessage || '알 수 없음'})`;
+            }
+        }
+    </script>
+</body>
+</html>
+

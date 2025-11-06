@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="(주)제이앤에스건설 고객지원 - 공지사항, 견적 문의">
+    <title>고객지원 | (주)제이앤에스건설</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <img src="images/제이엔에스로고.jpg" alt="(주)제이앤에스건설 로고">
+                </div>
+                <span>(주)제이앤에스건설</span>
+            </a>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">메인</a>
+                <a href="about.html" class="nav-item">회사소개</a>
+                <a href="business.html" class="nav-item">사업영역</a>
+                <a href="portfolio.html" class="nav-item">시공실적</a>
+                <a href="support.html" class="nav-item active">고객지원</a>
+                <a href="quote-list.html" class="nav-item">견적 현황</a>
+            </nav>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content">
+        <!-- 페이지 타이틀 -->
+        <section style="background: linear-gradient(135deg, #6a1a2b 0%, #8b2d42 100%); padding: 80px 20px; text-align: center; color: white;">
+            <div class="container">
+                <h1 style="font-size: 3rem; font-weight: bold; margin-bottom: 1rem;">고객지원</h1>
+                <p style="font-size: 1.25rem;">언제든지 문의해주세요. 빠르고 정확한 답변을 드리겠습니다</p>
+            </div>
+        </section>
+
+        <!-- 공지사항 & 견적 문의 섹션 -->
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;" class="support-grid">
+                <!-- 공지사항 -->
+                <section class="section" style="background: var(--gray-100); padding: 3rem 1.5rem;">
+                    <h2 class="section-title" style="margin-bottom: 2rem;">공지사항</h2>
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-body">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                <h3 style="font-size: 1.125rem; color: var(--gray-800);">신규 시공 분야 추가 안내</h3>
+                                <span style="font-size: 0.875rem; color: var(--gray-500);">2025.01.15</span>
+                            </div>
+                            <p style="color: var(--gray-600); font-size: 0.9rem;">
+                                (주)제이앤에스건설은 더욱 다양한 고객 요구에 부응하기 위해 신규 시공 분야를 추가했습니다...
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-body">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                <h3 style="font-size: 1.125rem; color: var(--gray-800);">설날 연휴 업무 일정 안내</h3>
+                                <span style="font-size: 0.875rem; color: var(--gray-500);">2025.01.20</span>
+                            </div>
+                            <p style="color: var(--gray-600); font-size: 0.9rem;">
+                                설날 연휴 기간 동안 업무 일정이 조정됨을 안내드립니다...
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-body">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                <h3 style="font-size: 1.125rem; color: var(--gray-800);">A/S 서비스 확대 안내</h3>
+                                <span style="font-size: 0.875rem; color: var(--gray-500);">2024.12.10</span>
+                            </div>
+                            <p style="color: var(--gray-600); font-size: 0.9rem;">
+                                고객 만족도 향상을 위해 A/S 서비스 범위를 확대하게 되었습니다...
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                <h3 style="font-size: 1.125rem; color: var(--gray-800);">신규 협력업체 모집 공고</h3>
+                                <span style="font-size: 0.875rem; color: var(--gray-500);">2024.11.20</span>
+                            </div>
+                            <p style="color: var(--gray-600); font-size: 0.9rem;">
+                                함께 성장할 신규 협력업체를 모집하고 있습니다...
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 온라인 견적 문의 -->
+                <section class="section" id="estimate-form" style="padding: 3rem 1.5rem;">
+                    <h2 class="section-title" style="margin-bottom: 2rem;">온라인 시공 요청</h2>
+                    <form class="card" data-validate id="estimate-form-submit">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    견적 제목 <span class="required">*</span>
+                                </label>
+                                <input type="text" class="form-control" name="quote_title" required placeholder="예: 창호 교체 공사, 지붕 보수 작업 등" maxlength="100">
+                                <small style="color: var(--gray-600); font-size: 0.875rem; margin-top: 0.25rem; display: block;">
+                                    시공 내용을 간략하게 표현해주세요. (최대 100자)
+                                </small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    회사명/성함 <span class="required">*</span>
+                                </label>
+                                <input type="text" class="form-control" name="company_name" required placeholder="회사명 또는 성함을 입력해주세요">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    연락처 <span class="required">*</span>
+                                </label>
+                                <input type="tel" class="form-control" name="phone" required placeholder="010-XXXX-XXXX">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    이메일 <span class="required">*</span>
+                                </label>
+                                <input type="email" class="form-control" name="email" required placeholder="email@example.com">
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="form-label">시공 분야 (선택)</label>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                    <label class="form-check">
+                                        <input type="radio" name="business_area" value="금속/창호/온실" class="form-check-input">
+                                        <span class="form-check-label">금속/창호/온실</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="radio" name="business_area" value="지붕판금/실내건축" class="form-check-input">
+                                        <span class="form-check-label">지붕판금/실내건축</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="radio" name="business_area" value="모듈러 제작" class="form-check-input">
+                                        <span class="form-check-label">모듈러 제작</span>
+                                    </label>
+                                    <label class="form-check">
+                                        <input type="radio" name="business_area" value="기타" class="form-check-input">
+                                        <span class="form-check-label">기타</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">시공 장소 (주소)</label>
+                                <input type="text" class="form-control" name="location" placeholder="시공하실 장소의 주소를 입력해주세요">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    문의 내용 (상세) <span class="required">*</span>
+                                </label>
+                                <textarea class="form-control" name="message" required placeholder="시공 내용과 요구사항을 자세히 입력해주세요"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">참고 자료 첨부 (사진 등)</label>
+                                <div class="file-upload">
+                                    <label class="file-input-label">
+                                        <input type="file" class="file-input" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.pdf">
+                                        파일 선택 (최대 3개, 각 10MB 이하)
+                                    </label>
+                                    <div class="file-list"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-check">
+                                    <input type="checkbox" class="form-check-input" required name="privacy_agreement">
+                                    <span class="form-check-label">
+                                        <span class="required">*</span> 개인정보 수집 및 이용에 동의합니다
+                                    </span>
+                                </label>
+                                <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--gray-600); padding: 1rem; background: var(--gray-100); border-radius: 4px;">
+                                    <strong>개인정보 수집 및 이용 안내</strong><br>
+                                    수집 항목: 성명, 연락처, 이메일, 주소<br>
+                                    이용 목적: 견적 상담 및 고객 서비스 제공<br>
+                                    보유 기간: 상담 완료 후 1년 이내 파기
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1.125rem; font-size: 1.125rem;">
+                                견적 요청하기
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+
+        <!-- 연락처 안내 -->
+        <section class="section" style="background: var(--gray-100);">
+            <div class="container">
+                <h2 class="section-title">원하시는 연락 방법을 선택하세요</h2>
+                <div class="grid grid-3">
+                    <div class="card">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">📞</div>
+                            <h3 style="color: var(--primary-blue); margin-bottom: 0.5rem;">전화 상담</h3>
+                            <p style="color: var(--gray-600); margin-bottom: 1rem;">평일 09:00 ~ 18:00</p>
+                            <a href="tel:031-986-1190" class="btn btn-primary">031-986-1190</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">✉️</div>
+                            <h3 style="color: var(--primary-blue); margin-bottom: 0.5rem;">이메일 문의</h3>
+                            <p style="color: var(--gray-600); margin-bottom: 1rem;">24시간 접수 가능</p>
+                            <a href="mailto:jandscons@naver.com" class="btn btn-primary">jandscons@naver.com</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">💬</div>
+                            <h3 style="color: var(--primary-blue); margin-bottom: 0.5rem;">온라인 문의</h3>
+                            <p style="color: var(--gray-600); margin-bottom: 1rem;">위 견적 폼 작성</p>
+                            <a href="#estimate-form" class="btn btn-primary">바로가기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 풋터 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>(주)제이앤에스건설</h3>
+                    <p>정밀한 기술과 신뢰의 시공으로<br>고객과 함께 성장합니다.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>회사 정보</h3>
+                    <p>대표자: 김소연</p>
+                    <p><strong>본사:</strong> 인천광역시 부평구 경인로 1107 2층 (일신동)</p>
+                    <p><strong>지사:</strong> 경기도 김포시 양촌읍 석모로 44번길 90</p>
+                </div>
+                <div class="footer-section">
+                    <h3>연락처</h3>
+                    <p>전화: <a href="tel:031-986-1190">031-986-1190</a></p>
+                    <p>팩스: 031-986-1191</p>
+                    <p>이메일: <a href="mailto:jandscons@naver.com">jandscons@naver.com</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2025 J&S. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/firebase-quote.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        // 디버깅: 함수가 전역에서 접근 가능한지 확인
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== support.html 스크립트 로드 확인 ===');
+            console.log('submitEstimateForm 함수:', typeof submitEstimateForm !== 'undefined' ? '✅ 로드됨' : '❌ 로드되지 않음');
+            console.log('firebase:', typeof firebase !== 'undefined' ? '✅' : '❌');
+            console.log('db:', typeof db !== 'undefined' ? '✅' : '❌');
+            console.log('storage:', typeof storage !== 'undefined' ? '✅' : '❌');
+            
+            // 폼 요소 확인 및 제출 이벤트 바인딩
+            const form = document.getElementById('estimate-form-submit');
+            if (form) {
+                console.log('✅ 견적 요청 폼 찾음');
+                
+                // 폼 제출 이벤트 리스너 추가 (JavaScript로 직접 처리)
+                form.addEventListener('submit', async function(e) {
+                    console.log('=== 폼 제출 이벤트 발생 ===');
+                    console.log('이벤트 타입:', e.type);
+                    console.log('submitEstimateForm 함수 존재:', typeof submitEstimateForm !== 'undefined');
+                    
+                    // 기본 제출 동작 방지 (JavaScript로 처리)
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (typeof submitEstimateForm === 'undefined') {
+                        console.error('❌ submitEstimateForm 함수가 정의되지 않았습니다!');
+                        console.error('firebase-quote.js 파일이 제대로 로드되었는지 확인하세요.');
+                        alert('오류: 견적 요청 처리 함수를 찾을 수 없습니다.\n페이지를 새로고침해주세요.');
+                        return false;
+                    }
+                    
+                    // 브라우저 기본 검증 확인
+                    if (!form.checkValidity()) {
+                        console.warn('⚠️ 브라우저 기본 검증 실패');
+                        // 브라우저 기본 검증 메시지 표시
+                        form.reportValidity();
+                        return false;
+                    }
+                    
+                    console.log('✅ 브라우저 기본 검증 통과');
+                    console.log('submitEstimateForm 함수 호출 시작...');
+                    
+                    // submitEstimateForm 함수 호출
+                    try {
+                        const result = await submitEstimateForm(form);
+                        console.log('submitEstimateForm 함수 결과:', result);
+                        return result;
+                    } catch (error) {
+                        console.error('submitEstimateForm 함수 실행 중 오류:', error);
+                        alert('견적 요청 처리 중 오류가 발생했습니다: ' + error.message);
+                        return false;
+                    }
+                });
+                
+                console.log('✅ 폼 제출 이벤트 리스너 등록 완료');
+            } else {
+                console.error('❌ 견적 요청 폼을 찾을 수 없습니다!');
+            }
+        });
+    </script>
+</body>
+</html>
+

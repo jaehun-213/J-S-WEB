@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="(주)제이앤에스건설 견적 상세">
+    <title>견적 상세 | (주)제이앤에스건설</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <img src="images/제이엔에스로고.jpg" alt="(주)제이앤에스건설 로고">
+                </div>
+                <span>(주)제이앤에스건설</span>
+            </a>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">메인</a>
+                <a href="about.html" class="nav-item">회사소개</a>
+                <a href="business.html" class="nav-item">사업영역</a>
+                <a href="portfolio.html" class="nav-item">시공실적</a>
+                <a href="support.html" class="nav-item">고객지원</a>
+                <a href="quote-list.html" class="nav-item active">견적 현황</a>
+                <div id="auth-buttons" style="display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem;">
+                    <!-- 로그인/로그아웃 버튼이 여기에 동적으로 추가됨 -->
+                </div>
+            </nav>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content">
+        <section class="section">
+            <div class="container">
+                <div style="max-width: 900px; margin: 0 auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <a href="quote-list.html" class="btn btn-outline">← 목록으로</a>
+                        <!-- 관리자 인증 상태 표시 -->
+                        <div id="admin-status" style="display: none;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="color: var(--primary-blue); font-size: 0.875rem;">
+                                    <strong>관리자:</strong> <span id="admin-email"></span>
+                                </span>
+                                <button id="logout-btn" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;">로그아웃</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="public-content" class="card" style="margin-bottom: 2rem;">
+                        <div class="card-body">
+                            <div id="loading" style="text-align: center; padding: 3rem;">
+                                <div class="spinner" style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #6a1a2b; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                                <p style="margin-top: 1rem; color: var(--gray-600);">로딩 중...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="private-content"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 풋터 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>(주)제이앤에스건설</h3>
+                    <p>정밀한 기술과 신뢰의 시공으로<br>고객과 함께 성장합니다.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>회사 정보</h3>
+                    <p>대표자: 김소연</p>
+                    <p><strong>본사:</strong> 인천광역시 부평구 경인로 1107 2층 (일신동)</p>
+                    <p><strong>지사:</strong> 경기도 김포시 양촌읍 석모로 44번길 90</p>
+                </div>
+                <div class="footer-section">
+                    <h3>연락처</h3>
+                    <p>전화: <a href="tel:031-986-1190">031-986-1190</a></p>
+                    <p>팩스: 031-986-1191</p>
+                    <p>이메일: <a href="mailto:jandscons@naver.com">jandscons@naver.com</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2025 J&S. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // URL에서 ID 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const quoteId = urlParams.get('id');
+
+        console.log('=== quote-detail.html 디버깅 시작 ===');
+        console.log('URL 파라미터:', window.location.search);
+        console.log('추출된 문서 ID:', quoteId);
+        console.log('문서 ID 타입:', typeof quoteId);
+        console.log('문서 ID 길이:', quoteId ? quoteId.length : 0);
+
+        if (!quoteId) {
+            console.error('문서 ID가 없습니다. quote-list.html로 리디렉션합니다.');
+            window.location.href = 'quote-list.html';
+        }
+
+        // 공개 콘텐츠는 인증 상태와 관계없이 먼저 로드
+        loadPublicContent();
+
+        // 인증 상태 UI 업데이트
+        function updateAuthUI(user) {
+            const adminStatus = document.getElementById('admin-status');
+            const adminEmail = document.getElementById('admin-email');
+            const logoutBtn = document.getElementById('logout-btn');
+            const authButtons = document.getElementById('auth-buttons');
+            
+            if (user) {
+                // 로그인 상태 - 관리자 모드
+                console.log('관리자 로그인 상태:', user.email);
+                if (adminStatus) adminStatus.style.display = 'block';
+                if (adminEmail) adminEmail.textContent = user.email;
+                
+                // 로그아웃 버튼 이벤트
+                if (logoutBtn) {
+                    logoutBtn.onclick = async function() {
+                        if (confirm('로그아웃하시겠습니까?')) {
+                            try {
+                                await auth.signOut();
+                                console.log('로그아웃 완료');
+                                alert('로그아웃되었습니다.');
+                                location.reload();
+                            } catch (error) {
+                                console.error('로그아웃 오류:', error);
+                                alert('로그아웃 중 오류가 발생했습니다.');
+                            }
+                        }
+                    };
+                }
+                
+                // 헤더의 로그인 버튼 숨김 (관리자 모드일 때는 로그인 버튼 불필요)
+                if (authButtons) {
+                    authButtons.innerHTML = '';
+                    authButtons.style.display = 'none';
+                }
+            } else {
+                // 로그아웃 상태 - 일반 사용자 모드
+                console.log('로그아웃 상태입니다. (일반 사용자 모드)');
+                if (adminStatus) adminStatus.style.display = 'none';
+                
+                // 헤더의 로그인 버튼 숨김 (일반 사용자는 헤더에 로그인 버튼이 필요 없음)
+                // 비공개 콘텐츠 영역의 "관리자 로그인" 링크는 showLoginPrompt()에서 유지됨
+                if (authButtons) {
+                    authButtons.innerHTML = '';
+                    authButtons.style.display = 'none';
+                }
+            }
+        }
+        
+        // 인증 상태 확인 및 비공개 콘텐츠 로드
+        auth.onAuthStateChanged(async (user) => {
+            // UI 업데이트
+            updateAuthUI(user);
+            
+            if (user) {
+                // 관리자 로그인 상태
+                console.log('관리자 로그인 확인. 인증 토큰을 준비합니다...');
+                
+                try {
+                    // ★ 핵심 수정: 인증 토큰이 완전히 준비될 때까지 대기
+                    // 이렇게 하면 Firestore 보안 규칙에서 request.auth != null을 올바르게 인식할 수 있습니다.
+                    const token = await user.getIdToken();
+                    console.log('인증 토큰 준비 완료. 비공개 데이터를 로드합니다.');
+                    
+                    // 토큰이 준비된 후에만 비공개 데이터 로드
+                    await loadPrivateContent();
+                } catch (tokenError) {
+                    console.error('인증 토큰 가져오기 오류:', tokenError);
+                    showLoginPrompt();
+                }
+            } else {
+                // 비로그인 상태
+                console.log('로그아웃 상태입니다.');
+                showLoginPrompt();
+            }
+        });
+
+        async function loadPublicContent() {
+            const publicContainer = document.getElementById('public-content');
+            const loading = document.getElementById('loading');
+            
+            try {
+                console.log('--- Public 데이터 조회 시작 ---');
+                console.log('조회할 문서 ID:', quoteId);
+                console.log('컬렉션: quoteRequests_public');
+                
+                // Firestore 초기화 확인
+                if (typeof db === 'undefined') {
+                    throw new Error('Firestore가 초기화되지 않았습니다.');
+                }
+                
+                const docRef = db.collection('quoteRequests_public').doc(quoteId);
+                console.log('문서 참조 생성 완료:', docRef.path);
+                
+                const doc = await docRef.get();
+                console.log('문서 조회 완료');
+                console.log('문서 존재 여부 (doc.exists):', doc.exists);
+                console.log('문서 ID (doc.id):', doc.id);
+                
+                if (!doc.exists) {
+                    console.warn('⚠️ Public 문서가 존재하지 않습니다!');
+                    console.warn('조회한 ID:', quoteId);
+                    console.warn('실제 Firestore에 이 ID의 문서가 있는지 확인하세요.');
+                    
+                    // 전체 컬렉션 조회하여 실제 존재하는 ID 확인
+                    try {
+                        const allDocs = await db.collection('quoteRequests_public').limit(10).get();
+                        console.log('전체 Public 문서 개수:', allDocs.size);
+                        const existingIds = [];
+                        allDocs.forEach(d => {
+                            existingIds.push(d.id);
+                            console.log('존재하는 문서 ID:', d.id, '제목:', d.data().title);
+                        });
+                        console.log('존재하는 문서 ID 목록:', existingIds);
+                    } catch (listError) {
+                        console.error('전체 문서 조회 실패:', listError);
+                    }
+                    
+                    publicContainer.innerHTML = `
+                        <div class="card-body">
+                            <p style="color: #EF4444;">견적 요청을 찾을 수 없습니다.</p>
+                            <p style="color: var(--gray-600); margin-top: 0.5rem; font-size: 0.875rem;">문서 ID: ${quoteId}</p>
+                            <p style="color: var(--gray-500); margin-top: 0.5rem; font-size: 0.75rem;">브라우저 콘솔(F12)에서 상세 로그를 확인하세요.</p>
+                            <a href="quote-list.html" class="btn btn-primary" style="margin-top: 1rem;">목록으로</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const data = doc.data();
+                const date = data.createdAt ? data.createdAt.toDate().toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : '날짜 없음';
+
+                loading.style.display = 'none';
+                publicContainer.innerHTML = `
+                    <div class="card-body">
+                        <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">${data.title || '제목 없음'}</h2>
+                        <p style="color: var(--gray-600);">접수일: ${date}</p>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('공개 정보 로드 오류:', error);
+                loading.style.display = 'none';
+                publicContainer.innerHTML = `
+                    <div class="card-body">
+                        <p style="color: #EF4444;">정보를 불러오는 중 오류가 발생했습니다.</p>
+                        <p style="color: var(--gray-600); margin-top: 0.5rem; font-size: 0.875rem;">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadPrivateContent() {
+            const privateContainer = document.getElementById('private-content');
+            
+            // 로딩 표시
+            privateContainer.innerHTML = `
+                <div class="card">
+                    <div class="card-body" style="text-align: center; padding: 2rem;">
+                        <div class="spinner" style="display: inline-block; width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #6a1a2b; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                        <p style="margin-top: 1rem; color: var(--gray-600);">상세 정보를 불러오는 중...</p>
+                    </div>
+                </div>
+            `;
+            
+            try {
+                console.log('--- Private 데이터 조회 시작 ---');
+                console.log('조회할 문서 ID:', quoteId);
+                console.log('컬렉션: quoteRequests_private');
+                
+                // 인증 상태 재확인 (안전장치)
+                const currentUser = auth.currentUser;
+                if (!currentUser) {
+                    throw new Error('인증되지 않은 사용자입니다. 다시 로그인해주세요.');
+                }
+                console.log('인증된 사용자:', currentUser.email);
+
+                // 인증 토큰 재확인 (추가 안전장치)
+                try {
+                    const token = await currentUser.getIdToken(true); // true = 강제 새로고침
+                    console.log('인증 토큰 확인 완료');
+                } catch (tokenError) {
+                    console.error('인증 토큰 재확인 실패:', tokenError);
+                    throw new Error('인증 토큰을 가져올 수 없습니다. 다시 로그인해주세요.');
+                }
+
+                // Firestore 쿼리 실행
+                const docRef = db.collection('quoteRequests_private').doc(quoteId);
+                console.log('Private 문서 참조 생성 완료:', docRef.path);
+                
+                const doc = await docRef.get();
+                console.log('Private 문서 조회 완료');
+                console.log('문서 존재 여부 (doc.exists):', doc.exists);
+                console.log('문서 ID (doc.id):', doc.id);
+                
+                // ★ 핵심 수정: doc.exists가 false인 경우와 permission-denied 오류를 구분
+                // doc.exists가 false이면 문서가 정말로 없는 경우입니다.
+                if (!doc.exists) {
+                    console.warn('⚠️ Private 문서가 존재하지 않습니다!');
+                    console.warn('조회한 ID:', quoteId);
+                    console.warn('Public 문서는 존재하지만 Private 문서가 없습니다.');
+                    console.warn('이는 데이터 저장 시 문제가 있었을 수 있습니다.');
+                    
+                    // 전체 Private 컬렉션 조회하여 실제 존재하는 ID 확인
+                    try {
+                        const allPrivateDocs = await db.collection('quoteRequests_private').limit(10).get();
+                        console.log('전체 Private 문서 개수:', allPrivateDocs.size);
+                        const existingPrivateIds = [];
+                        allPrivateDocs.forEach(d => {
+                            existingPrivateIds.push(d.id);
+                            console.log('존재하는 Private 문서 ID:', d.id);
+                        });
+                        console.log('존재하는 Private 문서 ID 목록:', existingPrivateIds);
+                        
+                        // Public과 Private ID 비교
+                        const allPublicDocs = await db.collection('quoteRequests_public').limit(10).get();
+                        const existingPublicIds = [];
+                        allPublicDocs.forEach(d => {
+                            existingPublicIds.push(d.id);
+                        });
+                        console.log('Public 문서 ID 목록:', existingPublicIds);
+                        console.log('Private 문서 ID 목록:', existingPrivateIds);
+                        
+                        // 일치하지 않는 ID 찾기
+                        const missingInPrivate = existingPublicIds.filter(id => !existingPrivateIds.includes(id));
+                        const missingInPublic = existingPrivateIds.filter(id => !existingPublicIds.includes(id));
+                        if (missingInPrivate.length > 0) {
+                            console.warn('⚠️ Public에는 있지만 Private에는 없는 ID:', missingInPrivate);
+                        }
+                        if (missingInPublic.length > 0) {
+                            console.warn('⚠️ Private에는 있지만 Public에는 없는 ID:', missingInPublic);
+                        }
+                    } catch (listError) {
+                        console.error('전체 문서 조회 실패:', listError);
+                        console.error('오류 코드:', listError.code);
+                        console.error('오류 메시지:', listError.message);
+                    }
+                    
+                    privateContainer.innerHTML = `
+                        <div class="card">
+                            <div class="card-body">
+                                <p style="color: var(--gray-600);">상세 정보를 찾을 수 없습니다. (문서 없음)</p>
+                                <p style="color: var(--gray-500); font-size: 0.875rem; margin-top: 0.5rem;">문서 ID: ${quoteId}</p>
+                                <p style="color: var(--gray-500); font-size: 0.875rem; margin-top: 0.5rem;">이 문서는 데이터베이스에 존재하지 않습니다.</p>
+                                <p style="color: var(--gray-400); font-size: 0.75rem; margin-top: 0.5rem;">💡 브라우저 콘솔(F12)에서 상세 디버깅 정보를 확인하세요.</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const data = doc.data();
+                let fileLinks = '';
+                
+                if (data.fileUrls && data.fileUrls.length > 0) {
+                    fileLinks = '<div style="margin-top: 1.5rem;"><h4 style="color: var(--gray-800); margin-bottom: 0.5rem;">첨부파일</h4><ul style="list-style: none; padding-left: 0;">';
+                    data.fileUrls.forEach((url, index) => {
+                        const fileName = url.split('/').pop().split('?')[0];
+                        fileLinks += `<li style="margin-bottom: 0.5rem;"><a href="${url}" target="_blank" style="color: var(--primary-blue); text-decoration: none;">📎 ${fileName}</a></li>`;
+                    });
+                    fileLinks += '</ul></div>';
+                }
+
+                privateContainer.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 style="color: var(--primary-blue); margin-bottom: 1.5rem; border-bottom: 2px solid var(--gray-200); padding-bottom: 0.5rem;">상세 정보 (관리자 전용)</h3>
+                            <div style="display: grid; gap: 1rem;">
+                                <div>
+                                    <strong style="color: var(--gray-700);">성함/회사명:</strong>
+                                    <p style="margin-top: 0.25rem; color: var(--gray-800);">${data.name || '-'}</p>
+                                </div>
+                                <div>
+                                    <strong style="color: var(--gray-700);">연락처:</strong>
+                                    <p style="margin-top: 0.25rem; color: var(--gray-800);">${data.contact || '-'}</p>
+                                </div>
+                                <div>
+                                    <strong style="color: var(--gray-700);">이메일:</strong>
+                                    <p style="margin-top: 0.25rem; color: var(--gray-800);">${data.email || '-'}</p>
+                                </div>
+                                <div>
+                                    <strong style="color: var(--gray-700);">시공 분야:</strong>
+                                    <p style="margin-top: 0.25rem; color: var(--gray-800);">${data.businessArea || '기타'}</p>
+                                </div>
+                                ${data.location ? `
+                                <div>
+                                    <strong style="color: var(--gray-700);">시공 장소:</strong>
+                                    <p style="margin-top: 0.25rem; color: var(--gray-800);">${data.location}</p>
+                                </div>
+                                ` : ''}
+                                <div>
+                                    <strong style="color: var(--gray-700);">문의 내용:</strong>
+                                    <div style="margin-top: 0.5rem; padding: 1rem; background: var(--gray-100); border-radius: 8px; color: var(--gray-800); white-space: pre-wrap;">${data.details || '-'}</div>
+                                </div>
+                                ${fileLinks}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('비공개 정보 로드 오류:', error);
+                console.error('오류 코드:', error.code);
+                console.error('오류 메시지:', error.message);
+                console.error('오류 스택:', error.stack);
+                
+                let errorMessage = '상세 정보를 불러오는 중 오류가 발생했습니다.';
+                let errorDetail = error.message || '알 수 없는 오류';
+                let showRetryButton = false;
+                let isPermissionError = false;
+                
+                // ★ 핵심 수정: permission-denied 오류를 명확히 구분하여 처리
+                // permission-denied는 문서가 없어서가 아니라 권한 문제입니다.
+                if (error.code === 'permission-denied') {
+                    isPermissionError = true;
+                    errorMessage = '권한이 거부되었습니다. (permission-denied)';
+                    errorDetail = '관리자로 로그인했는지 확인해주세요. 인증 토큰이 준비되지 않았을 수 있습니다.';
+                    showRetryButton = true;
+                    
+                    console.warn('⚠️ 권한 오류: 문서가 없어서가 아니라 권한 문제입니다.');
+                    console.warn('인증 상태:', auth.currentUser ? '로그인됨' : '로그아웃됨');
+                    
+                    // 재시도 로직: 인증 토큰을 새로고침하고 다시 시도
+                    console.log('권한 오류 발생. 인증 토큰을 새로고침하고 재시도합니다...');
+                    
+                    // 잠시 후 자동 재시도 (선택사항)
+                    setTimeout(async () => {
+                        const currentUser = auth.currentUser;
+                        if (currentUser) {
+                            try {
+                                await currentUser.getIdToken(true); // 강제 새로고침
+                                console.log('인증 토큰 새로고침 완료. 데이터를 다시 로드합니다.');
+                                await loadPrivateContent(); // 재시도
+                            } catch (retryError) {
+                                console.error('재시도 실패:', retryError);
+                            }
+                        }
+                    }, 1000);
+                    
+                } else if (error.code === 'unavailable') {
+                    errorMessage = 'Firebase 서비스를 사용할 수 없습니다.';
+                    errorDetail = '인터넷 연결을 확인하세요.';
+                    showRetryButton = true;
+                } else if (error.message && error.message.includes('인증')) {
+                    errorMessage = '인증 오류가 발생했습니다.';
+                    errorDetail = error.message;
+                    showRetryButton = true;
+                }
+                
+                privateContainer.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <p style="color: #EF4444; font-weight: bold;">${errorMessage}</p>
+                            <p style="color: var(--gray-600); margin-top: 0.5rem; font-size: 0.875rem;">${errorDetail}</p>
+                            <p style="color: var(--gray-500); font-size: 0.75rem; margin-top: 0.5rem;">오류 코드: ${error.code || 'N/A'}</p>
+                            ${isPermissionError ? `
+                            <p style="color: var(--primary-blue); font-size: 0.75rem; margin-top: 0.5rem;">
+                                💡 참고: 이 오류는 문서가 없어서가 아니라 권한 문제입니다. 
+                                관리자로 로그인했는지 확인하세요.
+                            </p>
+                            ` : ''}
+                            ${showRetryButton ? `
+                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <a href="admin.html?redirect=quote-detail.html?id=${encodeURIComponent(quoteId)}" class="btn btn-primary">다시 로그인하기</a>
+                                <button onclick="location.reload()" class="btn btn-outline">페이지 새로고침</button>
+                            </div>
+                            ` : ''}
+                            <p style="color: var(--gray-400); font-size: 0.75rem; margin-top: 1rem;">
+                                💡 브라우저 콘솔(F12)에서 상세 디버깅 정보를 확인하세요.
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function showLoginPrompt() {
+            const privateContainer = document.getElementById('private-content');
+            privateContainer.innerHTML = `
+                <div class="card">
+                    <div class="card-body" style="text-align: center; padding: 3rem;">
+                        <p style="color: var(--gray-600); font-size: 1.125rem; margin-bottom: 1.5rem;">
+                            상세 내용은 관리자만 열람할 수 있습니다.
+                        </p>
+                        <a href="admin.html?redirect=quote-detail.html?id=${quoteId}" class="btn btn-primary">관리자 로그인</a>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</body>
+</html>
+
+

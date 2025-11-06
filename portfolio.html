@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="(주)제이앤에스건설 시공실적 - 완료한 프로젝트 갤러리">
+    <title>시공실적 | (주)제이앤에스건설</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <img src="images/제이엔에스로고.jpg" alt="(주)제이앤에스건설 로고">
+                </div>
+                <span>(주)제이앤에스건설</span>
+            </a>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">메인</a>
+                <a href="about.html" class="nav-item">회사소개</a>
+                <a href="business.html" class="nav-item">사업영역</a>
+                <a href="portfolio.html" class="nav-item active">시공실적</a>
+                <a href="support.html" class="nav-item">고객지원</a>
+                <a href="quote-list.html" class="nav-item">견적 현황</a>
+            </nav>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content">
+        <!-- 페이지 타이틀 -->
+        <section style="background: linear-gradient(135deg, #6a1a2b 0%, #8b2d42 100%); padding: 80px 20px; text-align: center; color: white;">
+            <div class="container">
+                <h1 style="font-size: 3rem; font-weight: bold; margin-bottom: 1rem;">시공실적</h1>
+                <p style="font-size: 1.25rem;">축적된 경험과 노하우로 완성한 수많은 프로젝트</p>
+            </div>
+        </section>
+
+        <!-- 시공실적 갤러리 -->
+        <section class="section">
+            <div class="container">
+                <!-- 필터 버튼 (옵션) -->
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <button class="btn btn-primary" data-filter="all" style="margin: 0.25rem;">전체</button>
+                    <button class="btn btn-outline" data-filter="metal" style="margin: 0.25rem;">금속/창호</button>
+                    <button class="btn btn-outline" data-filter="modular" style="margin: 0.25rem;">모듈러</button>
+                    <button class="btn btn-outline" data-filter="panel" style="margin: 0.25rem;">판넬/기타</button>
+                </div>
+
+                <!-- 프로젝트 카드 리스트 -->
+                <div class="grid grid-3" id="portfolio-grid">
+                    <!-- 프로젝트 1: 세종 행복주택 -->
+                    <div class="card portfolio-item" data-category="modular">
+                        <figure class="portfolio-image-wrapper">
+                            <img src="images/세종_행복주택.PNG" alt="세종 행복주택 시공 사진" class="portfolio-thumbnail">
+                        </figure>
+                        <div class="card-body">
+                            <span class="card-badge" style="background: #6a1a2b;">모듈러 제작</span>
+                            <h3 class="card-title">행복도시 6-3 UR1,2 모듈러 제작 설치 중 금속창호제작 납품</h3>
+                            <p class="card-text"><strong>발주처:</strong> (주)포스코A&C건축사사무소</p>
+                            <p class="card-text"><strong>시공년도:</strong> 2023년</p>
+                        </div>
+                    </div>
+
+                    <!-- 프로젝트 2: 인천신문 모듈러 -->
+                    <div class="card portfolio-item" data-category="modular">
+                        <figure class="portfolio-image-wrapper">
+                            <img src="images/인천신문_모듈러.PNG" alt="인천신문 모듈러 시공 사진" class="portfolio-thumbnail">
+                        </figure>
+                        <div class="card-body">
+                            <span class="card-badge" style="background: #6a1a2b;">모듈러 제작</span>
+                            <h3 class="card-title">인천신문 모듈러 제작 및 설치공사 중 금속창호제작납품</h3>
+                            <p class="card-text"><strong>발주처:</strong> (주)포스코A&C건축사사무소</p>
+                            <p class="card-text"><strong>시공년도:</strong> 2023년</p>
+                        </div>
+                    </div>
+
+                    <!-- 프로젝트 3: 서초동 도시형생활주택 -->
+                    <div class="card portfolio-item" data-category="metal">
+                        <figure class="portfolio-image-wrapper">
+                            <img src="images/서초동_도시형생활주택.png" alt="서초동 도시형생활주택 시공 사진" class="portfolio-thumbnail">
+                        </figure>
+                        <div class="card-body">
+                            <span class="card-badge" style="background: #EF4444;">금속/잡공사</span>
+                            <h3 class="card-title">서초동 도시형생활주택 신축공사 중 금속 및 잡공사</h3>
+                            <p class="card-text"><strong>발주처:</strong> (주)금성백조건설</p>
+                            <p class="card-text"><strong>시공년도:</strong> 2022년</p>
+                        </div>
+                    </div>
+
+                    <!-- 프로젝트 4: 신월동 한양립스 -->
+                    <div class="card portfolio-item" data-category="metal">
+                        <figure class="portfolio-image-wrapper">
+                            <img src="images/신월동_한양립스.PNG" alt="신월동 한양립스 시공 사진" class="portfolio-thumbnail">
+                        </figure>
+                        <div class="card-body">
+                            <span class="card-badge" style="background: #F59E0B;">금속공사</span>
+                            <h3 class="card-title">신월덕화 가로주택정비사업 신축공사 중 금속공사</h3>
+                            <p class="card-text"><strong>발주처:</strong> (주)한양건설</p>
+                            <p class="card-text"><strong>시공년도:</strong> 2024년</p>
+                        </div>
+                    </div>
+
+                    <!-- 프로젝트 5: GH 가로주택정비 대림아파트 -->
+                    <div class="card portfolio-item" data-category="panel">
+                        <figure class="portfolio-image-wrapper">
+                            <img src="images/GH_가로주택정비_대림아파트.PNG" alt="GH 가로주택정비 대림아파트 시공 사진" class="portfolio-thumbnail">
+                        </figure>
+                        <div class="card-body">
+                            <span class="card-badge" style="background: #6366F1;">가로주택정비</span>
+                            <h3 class="card-title">GH 가로주택정비 대림아파트 (임시)</h3>
+                            <p class="card-text"><strong>발주처:</strong> (임시) GH / 대림아파트</p>
+                            <p class="card-text"><strong>시공년도:</strong> (임시) 2024년</p>
+                        </div>
+                    </div>
+
+                    <!-- 프로젝트 6: 신촌헤리센트 아현역 -->
+                    <div class="card portfolio-item" data-category="metal">
+                        <figure class="portfolio-image-wrapper">
+                            <img src="images/신촌헤리센트아현역_도시형생활주택.PNG" alt="신촌헤리센트 아현역 시공 사진" class="portfolio-thumbnail">
+                        </figure>
+                        <div class="card-body">
+                            <span class="card-badge" style="background: #8B5CF6;">도시형생활주택</span>
+                            <h3 class="card-title">신촌헤리센트 아현역 도시형생활주택 (임시)</h3>
+                            <p class="card-text"><strong>발주처:</strong> (임시) 확인 중</p>
+                            <p class="card-text"><strong>시공년도:</strong> (임시) 2024년</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 전체 시공 실적 목록 -->
+                <section class="section" style="background: var(--gray-100);">
+                    <div class="container">
+                        <h2 class="section-title">전체 시공 실적 목록</h2>
+                        <p class="section-subtitle" style="margin-bottom: 2rem;">2015년부터 현재까지 완료한 모든 시공 실적을 연도별로 정리하였습니다</p>
+                        
+                        <div style="overflow-x: auto;">
+                            <table class="history-table" style="width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+                                <thead>
+                                    <tr style="background: var(--primary-blue); color: white;">
+                                        <th style="padding: 1rem; text-align: left; font-weight: 600; width: 10%;">연도</th>
+                                        <th style="padding: 1rem; text-align: left; font-weight: 600; width: 25%;">발주처 / 건설사</th>
+                                        <th style="padding: 1rem; text-align: left; font-weight: 600; width: 65%;">현장명 (공사 내용)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- 2025년 -->
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2025</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)무한건설산업</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">청북읍 율북리 3-62 위험물저장소 금속, 창호, 유리공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2025</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">자이가이스트 주식회사</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">GSC PP생산팀 출하사무동 제작 금속공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2025</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)원진개발</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)혜성로지켐 컨테이너 세척장 건설공사 중 금속공사 및 컨테이너받침 구조물 공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2025</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)원진개발</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)혜성로지켐 컨테이너 세척장 건설공사 중 잡철공사</td>
+                                    </tr>
+        
+                                    <!-- 2024년 -->
+                                    <tr style="border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2024</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)덕산종합건설</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">춘천 수소교통복합기지 액화수소 충전소 건축공사 중 금속 및 창호, 유리공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2024</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)한양건설</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">신월덕화 가로주택정비사업 신축공사 중 금속공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2024</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)씨티이앤씨</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">양평동1가 1-35,37 근린생활시설 신축공사 중 창호유리금속 공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2024</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)포스코A&C건축사사무소</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">행복도시 6-3 UR1,2 모듈러 제작 설치 중 철창호제작납품</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2024</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">두성종합건설 주식회사</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">인천송도초 외벽개선 및 장애인편의시설 설치 중 판넬, 금속, 창호유리공사</td>
+                                    </tr>
+        
+                                    <!-- 2023년 -->
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)포스코A&C건축사사무소</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">행복도시 6-3 UR1,2 모듈러 제작 설치 중 금속창호공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)포스코A&C건축사사무소</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">행복도시 6-3 UR1,2 모듈러 제작 설치 중 금속창호제작납품</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">한국농어촌공사 담양지사</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">강의지구 안전대책시설물 설치공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">신평산업(주)</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">둔곡교차로 BRT 중앙정류장 설치공사 중 금속창호</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)포스코A&C건축사사무소</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">삼척화력발전소 항만관리동 설계 및 시공 중 금속공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)포스코A&C건축사사무소</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">삼척화력발전소 항만관리동 설계 및 시공 중 금속제작납품(모듈러)</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">삼중테크건설주식회사</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">석촌동 23번지 근린생활시설 신축공사 중 금속창호공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)포스코A&C건축사사무소</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">인천신문 모듈러 제작 및 설치공사 중 금속창호공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)포스코A&C건축사사무소</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">인천신문 모듈러 제작 및 설치공사 중 금속창호제작납품(모듈러)</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)블루종합건설</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">㈜프랭크에프앤비 신사옥 증축 및 대수선공사 중 판넬공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)한양건설</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">부천 역곡 가로주택정비사업 신축공사 중 금속공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">한웅건설(주)</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">21-육-00부대 시설공사(1473) 중 금속, 창호, 유리공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">(주)도원이엔씨</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">부여군 생활폐기물 자원회수시설 설치사업 중 건축판넬공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">와이지건설산업(주)</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">제주도 제주시 한경면 저지리 공동주택 신축공사 중 창호유리금속공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2023</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">용성종합건설(주)</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">21-육-00부대 시설공사(1486)_3지역 중 금속, 창호, 유리공사</td>
+                                    </tr>
+        
+                                    <!-- 2015년 -->
+                                    <tr style="border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2015</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">㈜에스에이치디</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">중량구 망우동 스마트빌 신축공사 중 금속 및 창호공사</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2015</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">신성대학교 산학협력단</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">신성대학교 간호학과 금속기와 보수작업</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                                        <td style="padding: 1rem; font-weight: 600; color: var(--primary-blue);">2015</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">㈜서도건설</td>
+                                        <td style="padding: 1rem; color: var(--gray-700);">평택시 합정동 타임스퀘어 근린생활시설 신축공사 중 금속 및 창호공사</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+                <!-- 견적 문의 CTA -->
+                <div style="text-align: center; margin-top: 4rem; padding: 3rem; background: var(--gray-100); border-radius: 12px;">
+                    <h2 style="color: var(--primary-blue); font-size: 2rem; margin-bottom: 1rem;">이런 프로젝트를 원하시나요?</h2>
+                    <p style="font-size: 1.25rem; color: var(--gray-600); margin-bottom: 2rem;">
+                        전문 기술력과 풍부한 경험으로 고객님의 프로젝트를 완벽하게 완성해드리겠습니다.
+                    </p>
+                    <a href="support.html#estimate-form" class="btn btn-primary" style="font-size: 1.25rem; padding: 1.25rem 3rem;">
+                        무료 견적 문의하기
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+    <!-- 풋터 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>(주)제이앤에스건설</h3>
+                    <p>정밀한 기술과 신뢰의 시공으로<br>고객과 함께 성장합니다.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>회사 정보</h3>
+                    <p>대표자: 김소연</p>
+                    <p><strong>본사:</strong> 인천광역시 부평구 경인로 1107 2층 (일신동)</p>
+                    <p><strong>지사:</strong> 경기도 김포시 양촌읍 석모로 44번길 90</p>
+                </div>
+                <div class="footer-section">
+                    <h3>연락처</h3>
+                    <p>전화: <a href="tel:031-986-1190">031-986-1190</a></p>
+                    <p>팩스: 031-986-1191</p>
+                    <p>이메일: <a href="mailto:jandscons@naver.com">jandscons@naver.com</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2025 J&S. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // 포트폴리오 필터 기능
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('[data-filter]');
+            const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // 버튼 활성화 상태 변경
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('btn-primary');
+                        btn.classList.add('btn-outline');
+                    });
+                    this.classList.remove('btn-outline');
+                    this.classList.add('btn-primary');
+                    
+                    // 포트폴리오 아이템 필터링
+                    portfolioItems.forEach(item => {
+                        if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

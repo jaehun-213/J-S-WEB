@@ -1,0 +1,1025 @@
+/* ============================================
+   제이앤에스 웹사이트 공통 스타일
+   ============================================ */
+
+:root {
+    /* 메인 컬러 파레트 (버건디) */
+    --primary-color: #6a1a2b;
+    --primary-color-dark: #4d1320;
+    --primary-color-light: #8b2d42;
+    /* 하위 호환성을 위한 별칭 */
+    --primary-blue: #6a1a2b;
+    --primary-blue-dark: #4d1320;
+    --primary-blue-light: #8b2d42;
+    --white: #FFFFFF;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-600: #4B5563;
+    --gray-700: #374151;
+    --gray-800: #1F2937;
+    --gray-900: #111827;
+    
+    /* 간격 */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 5rem;
+    
+    /* 타이포그래피 */
+    --font-primary: "Malgun Gothic", "맑은 고딕", sans-serif;
+    --font-size-xs: 0.875rem;
+    --font-size-sm: 1rem;
+    --font-size-md: 1.125rem;
+    --font-size-lg: 1.5rem;
+    --font-size-xl: 2rem;
+    --font-size-2xl: 2.5rem;
+    --font-size-3xl: 3rem;
+}
+
+/* 기본 리셋 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-primary);
+    color: var(--gray-800);
+    line-height: 1.6;
+    background-color: var(--white);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.3s ease;
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: all 0.3s ease;
+}
+
+/* ============================================
+   헤더 & 네비게이션
+   ============================================ */
+
+.header {
+    background-color: var(--white);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-sm) var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    flex-wrap: nowrap;
+}
+
+.logo {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.logo:hover {
+    opacity: 0.9;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-width: 40px;
+}
+
+.logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: nowrap;
+    margin-left: auto;
+}
+
+.nav-item {
+    font-size: var(--font-size-md);
+    font-weight: 500;
+    color: var(--gray-700);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    color: var(--primary-color);
+    background-color: var(--gray-100);
+}
+
+.mobile-menu-btn {
+    display: none;
+    font-size: var(--font-size-xl);
+    color: var(--gray-700);
+    flex-shrink: 0;
+    margin-left: var(--spacing-sm);
+}
+
+/* ============================================
+   메인 콘텐츠
+   ============================================ */
+
+.main-content {
+    min-height: calc(100vh - 200px);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.section {
+    padding: var(--spacing-xl) 0;
+}
+
+.section-title {
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    position: relative;
+    padding-bottom: var(--spacing-sm);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--primary-color);
+}
+
+.section-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--gray-600);
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+}
+
+/* ============================================
+   버튼 스타일
+   ============================================ */
+
+.btn {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    text-align: center;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(106, 26, 43, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--gray-200);
+    color: var(--gray-800);
+}
+
+.btn-secondary:hover {
+    background-color: var(--gray-300);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-group {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   카드 스타일
+   ============================================ */
+
+.card {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: var(--gray-200);
+}
+
+.card-body {
+    padding: var(--spacing-md);
+}
+
+.card-title {
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xs);
+}
+
+.card-text {
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-sm);
+}
+
+.card-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: #6a1a2b; /* J&S 버건디 색상 */
+    color: var(--white);
+    border-radius: 999px;
+    font-size: var(--font-size-xs);
+    font-weight: bold;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ============================================
+   그리드 레이아웃
+   ============================================ */
+
+.grid {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* ============================================
+   폼 스타일
+   ============================================ */
+
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-xs);
+}
+
+.form-label .required {
+    color: #EF4444;
+    margin-left: 4px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: var(--font-size-sm);
+    border: 2px solid var(--gray-300);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(106, 26, 43, 0.1);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-check {
+    display: flex;
+    align-items: start;
+    gap: var(--spacing-xs);
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.form-check-label {
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+}
+
+.file-upload {
+    position: relative;
+    margin-top: var(--spacing-sm);
+}
+
+.file-input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-input-label {
+    display: block;
+    padding: var(--spacing-sm);
+    border: 2px dashed var(--gray-300);
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--gray-600);
+    transition: all 0.3s ease;
+}
+
+.file-input-label:hover {
+    border-color: var(--primary-color);
+    background-color: var(--gray-100);
+}
+
+.file-list {
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    color: var(--gray-600);
+}
+
+/* ============================================
+   타임라인
+   ============================================ */
+
+.timeline {
+    position: relative;
+    padding-left: var(--spacing-lg);
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-300);
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: var(--spacing-lg);
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 2px solid var(--white);
+}
+
+.timeline-year {
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xs);
+}
+
+.timeline-content {
+    color: var(--gray-600);
+}
+
+/* ============================================
+   풋터
+   ============================================ */
+
+.footer {
+    background-color: var(--gray-900);
+    color: var(--gray-300);
+    padding: var(--spacing-xl) 0 var(--spacing-md);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.footer-section h3 {
+    color: var(--white);
+    margin-bottom: var(--spacing-sm);
+}
+
+.footer-section p,
+.footer-section a {
+    font-size: var(--font-size-sm);
+    line-height: 1.8;
+}
+
+.footer-section a:hover {
+    color: var(--primary-color-light);
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--gray-700);
+    padding-top: var(--spacing-md);
+    text-align: center;
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+}
+
+/* ============================================
+   히어로 슬라이더
+   ============================================ */
+
+.hero-slider {
+    position: relative;
+}
+
+.hero-slide {
+    display: none;
+}
+
+.hero-slide.active {
+    display: block;
+}
+
+.hero-slide h1 {
+    animation: fadeInUp 1s ease;
+}
+
+.hero-slide p {
+    animation: fadeInUp 1.2s ease;
+}
+
+.hero-slide .btn-group {
+    animation: fadeInUp 1.4s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-dots {
+    text-align: center;
+    padding: 20px;
+    background: var(--gray-100);
+}
+
+.hero-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--gray-300);
+    margin: 0 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hero-dot.active {
+    background: var(--primary-color);
+    width: 24px;
+    border-radius: 6px;
+}
+
+/* ============================================
+   반응형 디자인
+   ============================================ */
+
+@media (max-width: 1024px) {
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --font-size-2xl: 2rem;
+        --font-size-3xl: 2.5rem;
+    }
+    
+    .header-container {
+        padding: var(--spacing-sm);
+        position: relative;
+    }
+    
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        flex-direction: column;
+        gap: 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: var(--spacing-sm) 0;
+        margin-left: 0;
+        z-index: 1001;
+    }
+    
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .nav-item {
+        padding: var(--spacing-sm) var(--spacing-md);
+        width: 100%;
+        border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+    }
+    
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    .section {
+        padding: var(--spacing-md) 0;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .logo {
+        font-size: var(--font-size-lg);
+    }
+    
+    .logo-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .card-img {
+        height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* support.html의 양쪽 배치를 세로로 변경 */
+    section > .grid.grid-2,
+    div.grid-2,
+    .support-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    :root {
+        --font-size-2xl: 1.5rem;
+        --font-size-xl: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: var(--font-size-xl);
+    }
+}
+
+/* ============================================
+   Hero Slider 배경 이미지 설정
+   ============================================ */
+
+/* 공통 스타일 (기존 인라인 스타일 대체) */
+.hero-content-wrapper {
+    /* 기존 레이아웃 값 유지 */
+    color: white;
+    padding: 120px 20px;
+    text-align: center;
+    position: relative; /* 오버레이를 위한 기준점 */
+    z-index: 1; /* 오버레이보다 텍스트가 위로 오도록 */
+    min-height: 500px; /* 최소 높이 보장 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* 배경 이미지 공통 설정 (핵심) */
+    background-size: cover; /* 비율 유지하며 꽉 채우기 - 안전 영역 고려 */
+    background-position: center center; /* 항상 중앙 정렬 */
+    background-repeat: no-repeat;
+    background-attachment: scroll; /* 모바일 성능 최적화 */
+}
+
+/* 텍스트 가독성을 위한 어두운 오버레이 (공통) */
+.hero-content-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4); /* 어두운 반투명 레이어 */
+    z-index: -1; /* 텍스트보다 뒤로, 배경보다 앞으로 */
+}
+
+/* 텍스트가 오버레이 위에 표시되도록 z-index 설정 */
+.hero-content-wrapper .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* 개별 이미지 할당 */
+/* 슬라이드 1: 정밀한 기술과 신뢰의 시공 */
+.slide-bg-1 {
+    background-image: url('../images/정밀한_기술과_신뢰의_시공.png');
+}
+
+/* 슬라이드 2: 금속구조물 전문 시공 */
+.slide-bg-2 {
+    background-image: url('../images/금속구조물_전문_시공.png');
+}
+
+/* 슬라이드 3: 스마트팜 온실 공사 */
+.slide-bg-3 {
+    background-image: url('../images/스마트팜_온실_공사.png');
+}
+
+/* 모바일 반응형 조정 */
+@media (max-width: 768px) {
+    .hero-content-wrapper {
+        padding: 80px 20px;
+        min-height: 400px;
+        /* 모바일에서는 background-position을 조정하여 핵심 영역이 잘리지 않도록 */
+        background-position: center top;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content-wrapper {
+        padding: 60px 20px;
+        min-height: 350px;
+    }
+}
+
+/* ============================================
+   섹션 2: 사업 영역 카드 이미지 설정
+   ============================================ */
+
+/* 카드 이미지 영역 공통 스타일 */
+.card-image-wrapper {
+    /* 기존 높이 유지 */
+    height: 200px;
+    width: 100%;
+    
+    /* 배경 이미지 공통 설정 (핵심) */
+    background-size: cover; /* 비율 유지하며 꽉 채우기 - 안전 영역 고려 */
+    background-position: center center; /* 항상 중앙 정렬 */
+    background-repeat: no-repeat;
+    
+    /* 카드와 어울리게 모서리를 둥글게 (카드 상단만) */
+    border-radius: 8px 8px 0 0;
+    
+    /* 이미지 로딩 전 깜빡임 방지 */
+    background-color: var(--gray-300);
+}
+
+/* 개별 이미지 할당 (Hero Slider의 .slide-bg-X 클래스와 동일한 이미지 사용) */
+/* card-bg-1: 정밀한 기술과 신뢰의 시공 (창호 공사업) */
+.card-bg-1 {
+    background-image: url('../images/정밀한_기술과_신뢰의_시공.png');
+}
+
+/* card-bg-2: 금속구조물 전문 시공 (금속구조물 공사업) */
+.card-bg-2 {
+    background-image: url('../images/금속구조물_전문_시공.png');
+}
+
+/* card-bg-3: 스마트팜 온실 공사 (온실 공사업) */
+.card-bg-3 {
+    background-image: url('../images/스마트팜_온실_공사.png');
+}
+
+/* 모바일 반응형 조정 */
+@media (max-width: 768px) {
+    .card-image-wrapper {
+        height: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-image-wrapper {
+        height: 160px;
+    }
+}
+
+/* ============================================
+   '보유 면허' 카드 이미지 영역 스타일
+   ============================================ */
+
+/* 이미지를 감싸는 컨테이너 (이전 아이콘 div의 높이와 유사하게) */
+.card-doc-image-wrapper {
+    height: 180px; /* 아이콘 영역의 기존 높이와 유사하게 설정 (조정 가능) */
+    width: 100%;
+    overflow: hidden; /* 이미지가 넘칠 경우 숨김 */
+    /* 이미지가 'contain'될 때 양옆 여백을 채울 배경색 */
+    background-color: #f0f4f8; /* 기존 흰색 배경보다 약간 어두운 색 */
+    border-radius: 8px 8px 0 0; /* 카드의 상단 모서리에 맞춤 */
+    margin: 0; /* figure 기본 margin 제거 */
+    padding: 0; /* figure 기본 padding 제거 */
+    
+    /* 이미지가 중앙에 오도록 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 썸네일 이미지 자체의 스타일 (핵심) */
+.card-doc-thumbnail {
+    width: 100%;
+    height: 100%;
+    
+    /* 이미지가 찌그러지지 않고, 컨테이너 안에 전체가 보이도록 설정 */
+    object-fit: contain; /* 'cover'(채우기) -> 'contain'(안에 맞추기) */
+    
+    /* 이미지의 중앙을 우선적으로 보여줌 */
+    object-position: center center;
+    
+    /* 이미지 표시 최적화 */
+    display: block;
+}
+
+/* 모바일 반응형 조정 */
+@media (max-width: 768px) {
+    .card-doc-image-wrapper {
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-doc-image-wrapper {
+        height: 140px;
+    }
+}
+
+/* ============================================
+   시공 실적 목록 테이블 스타일
+   ============================================ */
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.history-table thead {
+    background: var(--primary-color);
+    color: white;
+}
+
+.history-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.history-table tbody tr {
+    border-bottom: 1px solid var(--gray-200);
+    transition: background-color 0.2s ease;
+}
+
+.history-table tbody tr:hover {
+    background-color: var(--gray-50);
+}
+
+.history-table tbody tr:nth-child(even) {
+    background-color: var(--gray-50);
+}
+
+.history-table tbody tr:nth-child(even):hover {
+    background-color: var(--gray-100);
+}
+
+.history-table td {
+    padding: 1rem;
+    color: var(--gray-700);
+}
+
+.history-table td:first-child {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 모바일 반응형 조정 */
+@media (max-width: 768px) {
+    .history-table {
+        font-size: 0.875rem;
+    }
+    
+    .history-table th,
+    .history-table td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .history-table th:first-child,
+    .history-table td:first-child {
+        width: 15%;
+    }
+    
+    .history-table th:nth-child(2),
+    .history-table td:nth-child(2) {
+        width: 30%;
+    }
+    
+    .history-table th:nth-child(3),
+    .history-table td:nth-child(3) {
+        width: 55%;
+    }
+}
+
+@media (max-width: 480px) {
+    .history-table {
+        font-size: 0.75rem;
+    }
+    
+    .history-table th,
+    .history-table td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    /* 모바일에서는 테이블을 가로 스크롤 가능하게 */
+    .history-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* ============================================
+   '대표 시공 실적' 갤러리 이미지 스타일
+   ============================================ */
+
+/* 이미지를 감싸는 컨테이너 (기존 이모지 div 높이) */
+.portfolio-image-wrapper {
+    height: 250px; /* 기존 이모지/배경 영역의 높이와 동일하게 설정 */
+    width: 100%;
+    overflow: hidden; /* 이미지가 넘칠 경우 숨김 */
+    background-color: #f0f0f0; /* 이미지 로딩 전 배경색 */
+    position: relative;
+    margin: 0; /* figure 기본 margin 제거 */
+    padding: 0; /* figure 기본 padding 제거 */
+    border-radius: 8px 8px 0 0; /* 카드 상단 모서리에 맞춤 */
+}
+
+/* 갤러리 썸네일 이미지 자체의 스타일 (핵심) */
+.portfolio-thumbnail {
+    width: 100%;
+    height: 100%;
+    
+    /* 이미지가 찌그러지지 않고, 컨테이너를 꽉 채우도록 설정 */
+    object-fit: cover;
+    
+    /* 이미지의 중앙을 우선적으로 보여줌 */
+    object-position: center center;
+    
+    /* 호버 시 약간 확대되는 효과 */
+    transition: transform 0.3s ease;
+    
+    /* 이미지 표시 최적화 */
+    display: block;
+}
+
+/* 카드에 마우스 호버 시 이미지 확대 효과 */
+.card.portfolio-item:hover .portfolio-thumbnail {
+    transform: scale(1.05);
+}
+
+/* 모바일 반응형 조정 */
+@media (max-width: 768px) {
+    .portfolio-image-wrapper {
+        height: 220px;
+    }
+}
+
+@media (max-width: 480px) {
+    .portfolio-image-wrapper {
+        height: 200px;
+    }
+}
+

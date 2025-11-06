@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="(주)제이앤에스건설 견적 현황">
+    <title>견적 현황 | (주)제이앤에스건설</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Firebase SDK (Storage 제거 - 이 페이지에서는 불필요) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <!-- Storage SDK 제거: quote-list.html에서는 파일 업로드가 없으므로 불필요한 미국 서버 연결 방지 -->
+    <script src="js/firebase-config.js"></script>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <img src="images/제이엔에스로고.jpg" alt="(주)제이앤에스건설 로고">
+                </div>
+                <span>(주)제이앤에스건설</span>
+            </a>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">메인</a>
+                <a href="about.html" class="nav-item">회사소개</a>
+                <a href="business.html" class="nav-item">사업영역</a>
+                <a href="portfolio.html" class="nav-item">시공실적</a>
+                <a href="support.html" class="nav-item">고객지원</a>
+                <a href="quote-list.html" class="nav-item active">견적 현황</a>
+                <div id="auth-buttons" style="display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem;">
+                    <!-- 로그인/로그아웃 버튼이 여기에 동적으로 추가됨 -->
+                </div>
+            </nav>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content">
+        <section style="background: linear-gradient(135deg, #6a1a2b 0%, #8b2d42 100%); padding: 80px 20px; text-align: center; color: white;">
+            <div class="container">
+                <h1 style="font-size: 3rem; font-weight: bold; margin-bottom: 1rem;">견적 현황</h1>
+                <p style="font-size: 1.25rem;">접수된 견적 요청 목록</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <!-- 관리자 인증 상태 표시 -->
+                <div id="admin-status" style="margin-bottom: 1.5rem; padding: 1rem; background: var(--gray-100); border-radius: 8px; display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: var(--primary-blue);">관리자 모드</strong>
+                            <span id="admin-email" style="color: var(--gray-600); font-size: 0.875rem; margin-left: 0.5rem;"></span>
+                        </div>
+                        <button id="logout-btn" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;">로그아웃</button>
+                    </div>
+                </div>
+                
+                <div id="quote-list-container">
+                    <div style="text-align: center; padding: 3rem;">
+                        <div class="spinner" style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #6a1a2b; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                        <p style="margin-top: 1rem; color: var(--gray-600);">견적 목록을 불러오는 중...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 풋터 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>(주)제이앤에스건설</h3>
+                    <p>정밀한 기술과 신뢰의 시공으로<br>고객과 함께 성장합니다.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>회사 정보</h3>
+                    <p>대표자: 김소연</p>
+                    <p><strong>본사:</strong> 인천광역시 부평구 경인로 1107 2층 (일신동)</p>
+                    <p><strong>지사:</strong> 경기도 김포시 양촌읍 석모로 44번길 90</p>
+                </div>
+                <div class="footer-section">
+                    <h3>연락처</h3>
+                    <p>전화: <a href="tel:031-986-1190">031-986-1190</a></p>
+                    <p>팩스: 031-986-1191</p>
+                    <p>이메일: <a href="mailto:jandscons@naver.com">jandscons@naver.com</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2025 J&S. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // 인증 상태 관리 및 UI 업데이트
+        function updateAuthUI(user) {
+            const authButtons = document.getElementById('auth-buttons');
+            const adminStatus = document.getElementById('admin-status');
+            const adminEmail = document.getElementById('admin-email');
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            if (user) {
+                // 로그인 상태 - 관리자 모드
+                console.log('관리자 로그인 상태:', user.email);
+                adminStatus.style.display = 'block';
+                adminEmail.textContent = user.email;
+                
+                // 로그아웃 버튼 이벤트
+                if (logoutBtn) {
+                    logoutBtn.onclick = async function() {
+                        if (confirm('로그아웃하시겠습니까?')) {
+                            try {
+                                await auth.signOut();
+                                console.log('로그아웃 완료');
+                                alert('로그아웃되었습니다.');
+                                location.reload();
+                            } catch (error) {
+                                console.error('로그아웃 오류:', error);
+                                alert('로그아웃 중 오류가 발생했습니다.');
+                            }
+                        }
+                    };
+                }
+                
+                // 헤더의 로그인 버튼 숨김 (관리자 모드일 때는 로그인 버튼 불필요)
+                if (authButtons) {
+                    authButtons.innerHTML = '';
+                    authButtons.style.display = 'none';
+                }
+            } else {
+                // 로그아웃 상태 - 일반 사용자 모드
+                console.log('로그아웃 상태 (일반 사용자 모드)');
+                adminStatus.style.display = 'none';
+                
+                // 헤더의 로그인 버튼도 숨김 (일반 사용자는 로그인 버튼이 필요 없음)
+                if (authButtons) {
+                    authButtons.innerHTML = '';
+                    authButtons.style.display = 'none';
+                }
+            }
+        }
+        
+        // 인증 상태 리스너 설정
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged((user) => {
+                updateAuthUI(user);
+            });
+        } else {
+            // Auth SDK가 로드될 때까지 대기
+            function waitForAuth() {
+                if (typeof auth !== 'undefined') {
+                    auth.onAuthStateChanged((user) => {
+                        updateAuthUI(user);
+                    });
+                } else {
+                    setTimeout(waitForAuth, 100);
+                }
+            }
+            waitForAuth();
+        }
+        
+        // 성능 최적화: 페이지 로드 시 즉시 데이터 요청 시작 (인증 로직 대기 없음)
+        // DOMContentLoaded를 기다리지 않고 스크립트 로드 직후 실행
+        (function() {
+            // Firestore 초기화 대기 (비동기)
+            function waitForFirestore() {
+                if (typeof firebase !== 'undefined' && typeof db !== 'undefined') {
+                    loadQuoteList();
+                    // 실시간 업데이트 리스너 설정 (선택사항)
+                    setupRealtimeListener();
+                } else if (typeof firebase !== 'undefined' && firebase.firestore) {
+                    // firebase-config.js가 아직 실행 중일 수 있으므로 약간의 지연 후 재시도
+                    setTimeout(waitForFirestore, 50);
+                } else {
+                    // Firebase SDK가 아직 로드되지 않음
+                    setTimeout(waitForFirestore, 100);
+                }
+            }
+            
+            // DOM 준비 여부와 관계없이 즉시 Firestore 확인 시작
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', waitForFirestore);
+            } else {
+                waitForFirestore();
+            }
+        })();
+
+        // 실시간 업데이트 리스너 (새로운 견적이 추가되면 자동으로 목록 갱신)
+        let isFirstSnapshot = true; // 첫 번째 스냅샷인지 추적
+        
+        function setupRealtimeListener() {
+            if (typeof db === 'undefined') {
+                console.warn('Firestore가 초기화되지 않아 실시간 리스너를 설정할 수 없습니다.');
+                return;
+            }
+
+            try {
+                console.log('실시간 업데이트 리스너 설정 중...');
+                
+                // 실시간 리스너 설정 (새 문서 추가 시 자동 갱신)
+                db.collection('quoteRequests_public')
+                    .orderBy('createdAt', 'desc')
+                    .onSnapshot((snapshot) => {
+                        // 첫 번째 스냅샷은 초기 로드이므로 무시 (이미 loadQuoteList()에서 처리됨)
+                        if (isFirstSnapshot) {
+                            isFirstSnapshot = false;
+                            console.log('실시간 리스너 초기화 완료. 변경사항 감지 대기 중...');
+                            return;
+                        }
+                        
+                        // 실제 변경사항 확인
+                        const changes = snapshot.docChanges();
+                        const hasNewDocs = changes.some(change => change.type === 'added');
+                        
+                        console.log('실시간 업데이트 감지:', {
+                            '변경된 문서 수': changes.length,
+                            '새로 추가된 문서': changes.filter(c => c.type === 'added').length,
+                            '전체 문서 수': snapshot.size
+                        });
+                        
+                        // 새 문서가 추가된 경우에만 목록 갱신
+                        if (hasNewDocs) {
+                            console.log('새로운 견적이 추가되었습니다. 목록을 갱신합니다.');
+                            loadQuoteList();
+                        }
+                    }, (error) => {
+                        console.error('실시간 리스너 오류:', error);
+                        // 실시간 리스너 실패 시에도 정상 작동하도록 계속 진행
+                        if (error.code === 'failed-precondition') {
+                            console.warn('인덱스가 없어 실시간 리스너를 사용할 수 없습니다. 수동 새로고침이 필요합니다.');
+                        }
+                    });
+                    
+                console.log('✅ 실시간 업데이트 리스너 설정 완료');
+            } catch (error) {
+                console.error('실시간 리스너 설정 실패:', error);
+                // 실시간 리스너 실패해도 정상 작동하도록 계속 진행
+            }
+        }
+
+        async function loadQuoteList() {
+            const container = document.getElementById('quote-list-container');
+            const startTime = performance.now(); // 성능 측정
+            
+            // Firebase 초기화 확인
+            if (typeof firebase === 'undefined') {
+                container.innerHTML = `
+                    <div class="card" style="text-align: center; padding: 3rem;">
+                        <p style="color: #EF4444;">Firebase가 초기화되지 않았습니다.</p>
+                        <p style="color: var(--gray-600); margin-top: 0.5rem; font-size: 0.875rem;">firebase-config.js 파일을 확인하세요.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            if (typeof db === 'undefined') {
+                container.innerHTML = `
+                    <div class="card" style="text-align: center; padding: 3rem;">
+                        <p style="color: #EF4444;">Firestore가 초기화되지 않았습니다.</p>
+                        <p style="color: var(--gray-600); margin-top: 0.5rem; font-size: 0.875rem;">firebase-config.js 파일을 확인하세요.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                console.log('견적 목록 로드 시작...', new Date().toISOString());
+                
+                // 인덱스 오류를 방지하기 위해 먼저 orderBy 없이 시도하고, 실패하면 전체 조회 후 정렬
+                let snapshot;
+                try {
+                    snapshot = await db.collection('quoteRequests_public')
+                        .orderBy('createdAt', 'desc')
+                        .get();
+                } catch (indexError) {
+                    if (indexError.code === 'failed-precondition') {
+                        console.warn('인덱스가 없어 전체 조회 후 정렬합니다.');
+                        // 인덱스 없이 전체 조회
+                        const allDocs = await db.collection('quoteRequests_public').get();
+                        // 클라이언트에서 정렬
+                        const sortedDocs = [];
+                        allDocs.forEach(doc => {
+                            sortedDocs.push({ id: doc.id, data: doc.data() });
+                        });
+                        sortedDocs.sort((a, b) => {
+                            const dateA = a.data.createdAt ? a.data.createdAt.toMillis() : 0;
+                            const dateB = b.data.createdAt ? b.data.createdAt.toMillis() : 0;
+                            return dateB - dateA; // 내림차순
+                        });
+                        
+                        // snapshot과 유사한 형태로 변환
+                        snapshot = {
+                            empty: sortedDocs.length === 0,
+                            size: sortedDocs.length,
+                            forEach: (callback) => {
+                                sortedDocs.forEach(item => {
+                                    callback({
+                                        id: item.id,
+                                        data: () => item.data
+                                    });
+                                });
+                            }
+                        };
+                    } else {
+                        throw indexError;
+                    }
+                }
+                
+                const loadTime = performance.now() - startTime;
+                console.log(`견적 목록 조회 완료: ${snapshot.size}개 (${loadTime.toFixed(2)}ms)`);
+                
+                // 조회된 문서 상세 로그
+                if (snapshot.size > 0) {
+                    console.log('조회된 견적 목록:');
+                    snapshot.forEach((doc, index) => {
+                        const data = typeof doc.data === 'function' ? doc.data() : doc.data;
+                        console.log(`${index + 1}. ID: ${doc.id}, 제목: ${data.title}, 날짜: ${data.createdAt ? (data.createdAt.toDate ? data.createdAt.toDate() : data.createdAt) : '없음'}`);
+                    });
+                }
+
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <div class="card" style="text-align: center; padding: 3rem;">
+                            <p style="color: var(--gray-600); font-size: 1.125rem;">아직 접수된 견적 요청이 없습니다.</p>
+                            <a href="support.html#estimate-form" class="btn btn-primary" style="margin-top: 1rem;">견적 요청하기</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '<div class="card"><div class="card-body"><table style="width: 100%; border-collapse: collapse;">';
+                html += '<thead><tr style="border-bottom: 2px solid var(--gray-200);">';
+                html += '<th style="padding: 1rem; text-align: left; color: var(--gray-800);">제목</th>';
+                html += '<th style="padding: 1rem; text-align: right; color: var(--gray-800);">접수일</th>';
+                html += '</tr></thead><tbody>';
+
+                snapshot.forEach(doc => {
+                    const data = typeof doc.data === 'function' ? doc.data() : doc.data;
+                    const docId = doc.id;
+                    
+                    // 디버깅 로그
+                    console.log('목록 항목:', {
+                        id: docId,
+                        title: data.title,
+                        idType: typeof docId,
+                        idLength: docId ? docId.length : 0
+                    });
+                    
+                    let date = '날짜 없음';
+                    
+                    if (data.createdAt) {
+                        if (data.createdAt.toDate) {
+                            date = data.createdAt.toDate().toLocaleDateString('ko-KR');
+                        } else if (data.createdAt.toMillis) {
+                            date = new Date(data.createdAt.toMillis()).toLocaleDateString('ko-KR');
+                        } else if (data.createdAt instanceof Date) {
+                            date = data.createdAt.toLocaleDateString('ko-KR');
+                        }
+                    }
+                    
+                    // URL 인코딩하여 특수문자 문제 방지
+                    const encodedDocId = encodeURIComponent(docId);
+                    html += `<tr style="border-bottom: 1px solid var(--gray-200); cursor: pointer;" onclick="window.location.href='quote-detail.html?id=${encodedDocId}'">`;
+                    html += `<td style="padding: 1rem;">${data.title || '제목 없음'}</td>`;
+                    html += `<td style="padding: 1rem; text-align: right; color: var(--gray-600);">${date}</td>`;
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table></div></div>';
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('견적 목록 로드 오류:', error);
+                console.error('오류 코드:', error.code);
+                console.error('오류 메시지:', error.message);
+                
+                let errorMsg = error.message || '알 수 없는 오류';
+                let errorDetail = '';
+                
+                if (error.code === 'permission-denied') {
+                    errorDetail = 'Firestore 보안 규칙에서 읽기 권한이 거부되었습니다.';
+                } else if (error.code === 'failed-precondition') {
+                    errorDetail = '인덱스가 필요합니다. Firebase 콘솔에서 제공된 링크를 클릭하여 인덱스를 생성하세요.';
+                } else if (error.code === 'unavailable') {
+                    errorDetail = 'Firebase 서비스를 사용할 수 없습니다. 인터넷 연결을 확인하세요.';
+                }
+                
+                container.innerHTML = `
+                    <div class="card" style="text-align: center; padding: 3rem;">
+                        <p style="color: #EF4444; font-size: 1.125rem; margin-bottom: 1rem;">견적 목록을 불러오는 중 오류가 발생했습니다.</p>
+                        <p style="color: var(--gray-800); margin-bottom: 0.5rem;"><strong>오류 코드:</strong> ${error.code || '알 수 없음'}</p>
+                        <p style="color: var(--gray-700); margin-bottom: 1rem;"><strong>오류 메시지:</strong> ${errorMsg}</p>
+                        ${errorDetail ? `<p style="color: var(--primary-blue); margin-bottom: 1rem;">💡 ${errorDetail}</p>` : ''}
+                        <a href="firebase-debug.html" class="btn btn-primary" style="margin-top: 1rem;">Firebase 연결 테스트</a>
+                    </div>
+                `;
+            }
+        }
+    </script>
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        table tbody tr:hover {
+            background-color: var(--gray-100);
+        }
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.875rem;
+            }
+            table th, table td {
+                padding: 0.75rem 0.5rem !important;
+            }
+        }
+    </style>
+</body>
+</html>
+
