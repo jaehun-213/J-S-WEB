@@ -28,7 +28,8 @@
     --spacing-xl: 5rem;
     
     /* 타이포그래피 */
-    --font-primary: "Malgun Gothic", "맑은 고딕", sans-serif;
+    --font-heading: 'Noto Sans KR', sans-serif;
+    --font-body: 'Nanum Gothic', sans-serif;
     --font-size-xs: 0.875rem;
     --font-size-sm: 1rem;
     --font-size-md: 1.125rem;
@@ -51,10 +52,25 @@ html {
 }
 
 body {
-    font-family: var(--font-primary);
+    font-family: var(--font-body);
     color: var(--gray-800);
     line-height: 1.6;
     background-color: var(--white);
+}
+
+a, p, ul, li, span {
+    font-family: var(--font-body);
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, .section-title, .card-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+}
+
+.card-badge, .btn {
+    font-family: var(--font-heading);
+    font-weight: 700;
 }
 
 img {
@@ -756,7 +772,7 @@ textarea.form-control {
 
 /* 슬라이드 3: 스마트팜 온실 공사 */
 .slide-bg-3 {
-    background-image: url('../images/스마트팜_온실_공사.png');
+    background-image: url('../images/온실_공사업.png');
 }
 
 /* 모바일 반응형 조정 */
@@ -811,7 +827,7 @@ textarea.form-control {
 
 /* card-bg-3: 스마트팜 온실 공사 (온실 공사업) */
 .card-bg-3 {
-    background-image: url('../images/스마트팜_온실_공사.png');
+    background-image: url('../images/온실_공사업.png');
 }
 
 /* 모바일 반응형 조정 */
@@ -1021,5 +1037,28 @@ textarea.form-control {
     .portfolio-image-wrapper {
         height: 200px;
     }
+}
+
+/* ============================================
+   '사업 영역' 페이지 이미지 스타일
+   ============================================ */
+
+.business-image-wrapper {
+    height: 300px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f0f4f8;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.business-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
 }
 
