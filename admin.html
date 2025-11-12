@@ -43,8 +43,8 @@
                     <div class="card">
                         <div class="card-body" style="padding: 3rem;">
                             <h2 style="color: var(--primary-blue); margin-bottom: 2rem; text-align: center;">관리자 로그인</h2>
-                            
-                            <div id="error-message" style="display: none; padding: 1rem; background: #FEE2E2; border: 1px solid #EF4444; border-radius: 8px; color: #EF4444; margin-bottom: 1.5rem;"></div>
+
+                            <div id="auth-error-message" role="alert" aria-live="assertive" style="display: none; padding: 1rem; background: #FEE2E2; border: 1px solid #EF4444; border-radius: 8px; color: #EF4444; margin-bottom: 1.5rem;"></div>
                             
                             <form id="login-form" onsubmit="return handleLogin(event);">
                                 <div class="form-group">
@@ -142,10 +142,9 @@
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('error-message');
             const submitBtn = event.target.querySelector('button[type="submit"]');
             
-            errorDiv.style.display = 'none';
+            clearErrorMessage();
             submitBtn.disabled = true;
             submitBtn.textContent = '로그인 중...';
 
@@ -161,19 +160,26 @@
                     window.location.href = 'quote-list.html';
                 }
             } catch (error) {
-                console.error('로그인 오류:', error);
-                console.error('오류 코드:', error.code);
-                console.error('오류 메시지:', error.message);
-                
-                // Firebase 초기화 확인
-                if (typeof firebase === 'undefined') {
-                    errorDiv.textContent = 'Firebase가 초기화되지 않았습니다. firebase-config.js 파일을 확인하세요.';
-                } else if (typeof auth === 'undefined') {
-                    errorDiv.textContent = 'Firebase Authentication이 초기화되지 않았습니다.';
-                } else {
-                    errorDiv.textContent = getErrorMessage(error.code, error.message);
+                console.error('Firebase Auth Error:', error.code, error.message, error);
+
+                let errorMessage = '로그인 중 알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+
+                if (
+                    error.code === 'auth/user-not-found' ||
+                    error.code === 'auth/wrong-password' ||
+                    error.code === 'auth/invalid-email' ||
+                    error.code === 'auth/invalid-credential' ||
+                    error.code === 'auth/invalid-login-credentials' ||
+                    error.code === 'auth/user-disabled'
+                ) {
+                    errorMessage = '이메일 또는 비밀번호가 틀렸습니다.';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = '로그인 시도 횟수가 너무 많습니다. 잠시 후 다시 시도해 주세요.';
+                } else if (typeof firebase === 'undefined' || typeof auth === 'undefined') {
+                    errorMessage = '시스템 설정 오류가 발생했습니다. 관리자에게 문의해주세요.';
                 }
-                errorDiv.style.display = 'block';
+
+                displayErrorMessage(errorMessage);
                 submitBtn.disabled = false;
                 submitBtn.textContent = '로그인';
             }
@@ -181,27 +187,39 @@
             return false;
         }
 
-        function getErrorMessage(errorCode, errorMessage) {
-            if (!errorCode) {
-                return `오류가 발생했습니다: ${errorMessage || '알 수 없는 오류'}`;
+        function displayErrorMessage(message) {
+            const container = document.getElementById('auth-error-message');
+            if (!container) {
+                alert(message);
+                return;
             }
-            
-            switch (errorCode) {
-                case 'auth/user-not-found':
-                    return '등록되지 않은 이메일입니다. Firebase Authentication에서 계정을 먼저 생성해주세요.';
-                case 'auth/wrong-password':
-                    return '비밀번호가 올바르지 않습니다.';
-                case 'auth/invalid-email':
-                    return '올바른 이메일 형식이 아닙니다.';
-                case 'auth/too-many-requests':
-                    return '너무 많은 로그인 시도가 있었습니다. 잠시 후 다시 시도해주세요.';
-                case 'auth/user-disabled':
-                    return '이 계정은 비활성화되었습니다.';
-                case 'auth/network-request-failed':
-                    return '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.';
-                default:
-                    return `로그인 중 오류가 발생했습니다. (코드: ${errorCode}, 메시지: ${errorMessage || '알 수 없음'})`;
+
+            if (displayErrorMessage.hideTimer) {
+                clearTimeout(displayErrorMessage.hideTimer);
             }
+
+            container.textContent = message;
+            container.style.display = 'block';
+
+            displayErrorMessage.hideTimer = setTimeout(() => {
+                container.style.display = 'none';
+                container.textContent = '';
+            }, 6000);
+        }
+
+        function clearErrorMessage() {
+            const container = document.getElementById('auth-error-message');
+            if (!container) {
+                return;
+            }
+
+            if (displayErrorMessage.hideTimer) {
+                clearTimeout(displayErrorMessage.hideTimer);
+                displayErrorMessage.hideTimer = null;
+            }
+
+            container.style.display = 'none';
+            container.textContent = '';
         }
     </script>
 </body>
