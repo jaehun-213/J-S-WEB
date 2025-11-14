@@ -16,15 +16,15 @@
 // - 실제 프로덕션 환경에서는 환경 변수나 서버 사이드 설정을 사용하는 것을 권장합니다.
 
 // Firebase 설정 객체
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY_HERE",
-    authDomain: "YOUR_AUTH_DOMAIN_HERE",
-    projectId: "YOUR_PROJECT_ID_HERE",
-    storageBucket: "YOUR_STORAGE_BUCKET_HERE",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID_HERE",
-    appId: "YOUR_APP_ID_HERE",
-    measurementId: "YOUR_MEASUREMENT_ID_HERE" // (선택사항)
-};
+var firebaseConfig = {
+    apiKey: "AIzaSyA204U5C9OMzC9h1rjSaEUz5wv8-4F91NI",
+    authDomain: "jns-web.firebaseapp.com",
+    projectId: "jns-web",
+    storageBucket: "jns-web.firebasestorage.app",
+    messagingSenderId: "726142140991",
+    appId: "1:726142140991:web:75fcc23c61263517fdee8a",
+    measurementId: "G-YEQPXWYLPW"
+  };
 
 // Firebase 초기화 (Firebase SDK가 로드된 후에만 실행)
 if (typeof firebase !== 'undefined') {
